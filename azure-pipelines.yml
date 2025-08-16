@@ -63,6 +63,11 @@ stages:
               itemPattern: 'warfile'
               downloadPath: '$(System.ArtifactsDirectory)'
               
+          - script: |
+              echo "Listing WAR files..."
+              dir $(System.ArtifactsDirectory)\warfile
+            displayName: "Check WAR file exists"
+
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'AzureWebAppConnection'
