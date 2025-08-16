@@ -11,23 +11,61 @@ pool:
   demands:
     - Agent.OS -equals Windows_NT
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'Path'
-    jdkDirectory: '$(JAVA_HOME)'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-- task: CopyFiles@2
-  inputs:
-    Contents: '**/*.war'
-    TargetFolder: '$(build.artifactstagingdirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'warfile'
-    publishLocation: 'Container'
+stages:
+# ----------------
+# Build Stage
+# ----------------
+- stage: Build
+  displayName: "Build Java WAR"
+  jobs:
+  - job: BuildJob
+    displayName: "Build with Maven"
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'Path'
+        jdkDirectory: '$(JAVA_HOME)'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+    - task: CopyFiles@2
+      inputs:
+        Contents: '**/*.war'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'warfile'
+        publishLocation: 'Container'
+
+
+# ----------------
+# Deploy Stage
+# ----------------
+- stage: Deploy
+  displayName: "Deploy to Azure Web App"
+  dependsOn: Build
+  jobs:
+  - deployment: DeployWebApp
+    displayName: "Deploy WAR to Azure"
+    environment: 'dev'   # you can define env in DevOps under "Environments"
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'specific'
+              itemPattern: 'warfile'
+              downloadPath: '$(System.ArtifactsDirectory)'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'AzureWebAppConnection'
+              appType: 'webAppLinux'
+              appName: 'unicornapp'
+              package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              runtimeStack: 'JAVA|21-java21'  
