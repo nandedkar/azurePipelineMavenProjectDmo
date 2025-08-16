@@ -59,19 +59,14 @@ stages:
           - task: DownloadBuildArtifacts@1
             inputs:
               buildType: 'current'
-              downloadType: 'single'
-              itemPattern: 'warfile'
+              downloadType: 'specific'
+              itemPattern: '**/*.war'
               downloadPath: '$(System.ArtifactsDirectory)'
-              
-          - script: |
-              echo "Listing WAR files..."
-              dir $(System.ArtifactsDirectory)\warfile
-            displayName: "Check WAR file exists"
-
+            
           - task: AzureWebApp@1
             inputs:
-              azureSubscription: 'AzureWebAppConnection'
+              azureSubscription: 'Azure subscription 1(554496eb-6a1e-48f3-877a-8db87b6f5c5c)'
               appType: 'webAppLinux'
               appName: 'unicornapp'
               package: '$(System.DefaultWorkingDirectory)/**/*.war'
-              runtimeStack: 'JAVA|21-java21'  
+              runtimeStack: 'JAVA|21-java21'
