@@ -45,23 +45,23 @@ stages:
 # # ----------------
 # # Deploy Stage
 # # ----------------
-- stage: Deploy
-  displayName: "Deploy to Azure Web App"
-  dependsOn: Build
-  jobs:
-  - deployment: DeployWebApp
-    displayName: "Deploy WAR to Azure"
-    environment: 'dev'   # you can define env in DevOps under "Environments"
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadBuildArtifacts@1
-            inputs:
-              buildType: 'current'
-              downloadType: 'specific'
-              itemPattern: '**/*.war'
-              downloadPath: '$(System.ArtifactsDirectory)'
+# - stage: Deploy
+#   displayName: "Deploy to Azure Web App"
+#   dependsOn: Build
+#   jobs:
+#   - deployment: DeployWebApp
+#     displayName: "Deploy WAR to Azure"
+#     environment: 'dev'   # you can define env in DevOps under "Environments"
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: DownloadBuildArtifacts@1
+#             inputs:
+#               buildType: 'current'
+#               downloadType: 'specific'
+#               itemPattern: '**/*.war'
+#               downloadPath: '$(System.ArtifactsDirectory)'
             
 #           - task: AzureWebApp@1
 #             inputs:
@@ -71,12 +71,12 @@ stages:
 #               package: '$(System.DefaultWorkingDirectory)/**/*.war'
 #               runtimeStack: 'JAVA|21-java21'
 
-          - task: AzureRmWebAppDeployment@5
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure subscription 1(554496eb-6a1e-48f3-877a-8db87b6f5c5c)'
-              appType: 'webAppLinux'
-              WebAppName: 'unicornapp'
-              packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.war'
-              RuntimeStack: 'JAVA|21-java21'
-              DeploymentTypeLinux: 'oneDeploy'
+          # - task: AzureRmWebAppDeployment@5
+          #   inputs:
+          #     ConnectionType: 'AzureRM'
+          #     azureSubscription: 'Azure subscription 1(554496eb-6a1e-48f3-877a-8db87b6f5c5c)'
+          #     appType: 'webAppLinux'
+          #     WebAppName: 'unicornapp'
+          #     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.war'
+          #     RuntimeStack: 'JAVA|21-java21'
+          #     DeploymentTypeLinux: 'oneDeploy'
