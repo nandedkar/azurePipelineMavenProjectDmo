@@ -7,15 +7,17 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  name: Default   # your self-hosted pool
+  demands:
+    - Agent.OS -equals Windows_NT
 
 steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
+    javaHomeOption: 'Path'
+    jdkDirectory: '$(JAVA_HOME)'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
