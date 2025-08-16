@@ -73,5 +73,5 @@ stages:
               azureSubscription: 'AzureWebAppConnection'
               appType: 'webAppLinux'
               appName: 'unicornapp'
-              package: '$(System.ArtifactsDirectory)/warfile/*.war'
+              package: '$(System.DefaultWorkingDirectory)/warfile/*.war'
               runtimeStack: 'JAVA|21-java21'  
