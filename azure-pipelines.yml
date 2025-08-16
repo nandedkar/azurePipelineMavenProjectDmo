@@ -62,10 +62,11 @@ stages:
               downloadType: 'single'
               itemPattern: 'warfile'
               downloadPath: '$(System.ArtifactsDirectory)'
+              
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'AzureWebAppConnection'
               appType: 'webAppLinux'
               appName: 'unicornapp'
-              package: '$(System.ArtifactsDirectory)/**/*.war'
+              package: '$(System.ArtifactsDirectory)/warfile/*.war'
               runtimeStack: 'JAVA|21-java21'  
