@@ -59,7 +59,7 @@ stages:
           - task: DownloadBuildArtifacts@1
             inputs:
               buildType: 'current'
-              downloadType: 'specific'
+              downloadType: 'single'
               itemPattern: 'warfile'
               downloadPath: '$(System.ArtifactsDirectory)'
           - task: AzureWebApp@1
@@ -67,5 +67,5 @@ stages:
               azureSubscription: 'AzureWebAppConnection'
               appType: 'webAppLinux'
               appName: 'unicornapp'
-              package: '$(System.DefaultWorkingDirectory)/**/*.war'
+              package: '$(System.ArtifactsDirectory)/**/*.war'
               runtimeStack: 'JAVA|21-java21'  
