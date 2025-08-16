@@ -77,6 +77,6 @@ stages:
               azureSubscription: 'Azure subscription 1(554496eb-6a1e-48f3-877a-8db87b6f5c5c)'
               appType: 'webAppLinux'
               WebAppName: 'unicornapp'
-              packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.war'
               RuntimeStack: 'JAVA|21-java21'
               DeploymentTypeLinux: 'oneDeploy'
